@@ -1,5 +1,7 @@
 package com.rest.pontointeligente.api.utils;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +20,7 @@ public class PasswordUtils {
 	 * @param senha
 	 * @return String
 	 */
-	public static String gerarBCript(String senha) {
+	public static String gerarBCript(String senha) throws NoSuchAlgorithmException {
 		if (senha == null) {
 			return senha;
 		}

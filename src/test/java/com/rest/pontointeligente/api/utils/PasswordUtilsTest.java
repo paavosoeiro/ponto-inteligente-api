@@ -2,6 +2,8 @@ package com.rest.pontointeligente.api.utils;
 
 import static org.junit.Assert.*;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -11,12 +13,12 @@ public class PasswordUtilsTest {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 	
 	@Test
-	public void testGerarBCript() {
+	public void testGerarBCript() throws NoSuchAlgorithmException {
 		assertNull(PasswordUtils.gerarBCript(null));
 	}
 	
 	@Test
-	public void testGerarSenhaNull() {
+	public void testGerarSenhaNull() throws NoSuchAlgorithmException {
 		String hash = PasswordUtils.gerarBCript(SENHA);
 		assertTrue(bCryptPasswordEncoder.matches(SENHA, hash));
 	}
