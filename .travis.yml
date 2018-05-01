@@ -3,5 +3,6 @@ jdk:
   - oraclejdk8
 before_install:
   - chmod +x mvnw
+  - mysql -e 'CREATE DATABASE ponto_inteligente;'
 services:
   - mysql
