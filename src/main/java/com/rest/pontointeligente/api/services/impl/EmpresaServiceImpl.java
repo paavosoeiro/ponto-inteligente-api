@@ -1,5 +1,6 @@
 package com.rest.pontointeligente.api.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -29,6 +30,18 @@ public class EmpresaServiceImpl implements EmpresaService {
 	public Empresa persist(Empresa empresa) {
 		log.info("Salvando empresa: {}", empresa);
 		return this.empresaRepository.save(empresa);
+	}
+
+	@Override
+	public List<Empresa> getAll() {
+		log.info("Buscando todas as empresas.");
+		return this.empresaRepository.findAll();
+	}
+
+	@Override
+	public Optional<Empresa> findOne(Long id) {
+		log.info("Buscando empresa pelo ID: {}.", id);
+		return this.empresaRepository.findById(id);
 	}
 
 }
