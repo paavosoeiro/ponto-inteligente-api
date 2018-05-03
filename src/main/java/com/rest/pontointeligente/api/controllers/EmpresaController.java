@@ -93,6 +93,7 @@ public class EmpresaController {
 	 * @param dto
 	 * @param result
 	 */
+	@SuppressWarnings("unused")
 	private void validateData(EmpresaDto dto, BindingResult result) {
 
 	}
