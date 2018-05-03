@@ -1,6 +1,7 @@
 package com.rest.pontointeligente.api.resources;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import org.springframework.hateoas.ResourceSupport;
 
@@ -13,7 +14,8 @@ public class EmpresaResource extends ResourceSupport	{
 	
 	public EmpresaResource(Empresa empresa) {
 		this.empresa = empresa;
-		this.add(linkTo(EmpresaController.class).slash(empresa.getId()).withSelfRel());
+		this.add(linkTo(methodOn(EmpresaController.class).readEmpresa(empresa.getId())).withSelfRel());
+		this.add(linkTo(methodOn(EmpresaController.class).readEmpresa(empresa.getId())).slash("funcionarios").withRel("funcionarios"));
 	}
 	
 	public Empresa getEmpresa() {

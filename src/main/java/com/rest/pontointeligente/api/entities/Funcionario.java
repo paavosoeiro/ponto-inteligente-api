@@ -22,6 +22,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rest.pontointeligente.api.enums.PerfilEnum;
 
 @Entity
@@ -32,15 +33,20 @@ public class Funcionario implements Serializable {
 	private Long id;
 	private String nome;
 	private String email;
+	@JsonIgnore
 	private String senha;
 	private String cpf;
 	private BigDecimal valorHora;
+	@JsonIgnore
 	private Float qtdHorasTrabalhoDia;
+	@JsonIgnore
 	private Float qtdHorasAlmoco;
 	private PerfilEnum perfil;
 	private Date dataCriacao;
 	private Date dataAtualizacao;
+	@JsonIgnore
 	private Empresa empresa;
+	@JsonIgnore
 	private List<Lancamento> lancamentos;
 
 	public Funcionario() {

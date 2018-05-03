@@ -1,14 +1,14 @@
 package com.rest.pontointeligente.api.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +23,6 @@ import com.rest.pontointeligente.api.dtos.EmpresaDto;
 import com.rest.pontointeligente.api.entities.Empresa;
 import com.rest.pontointeligente.api.exceptions.EmpresaNotFoundException;
 import com.rest.pontointeligente.api.resources.EmpresaResource;
-import com.rest.pontointeligente.api.response.Response;
 import com.rest.pontointeligente.api.services.EmpresaService;
 
 @RestController
@@ -38,65 +37,41 @@ public class EmpresaController {
 
 	/**
 	 * 
-	 * @return ResponseEntity<Response<List<EmpresaDto>>>
+	 * @return Resources<EmpresaResource>
 	 */
 	@GetMapping
-	public ResponseEntity<Response<List<EmpresaDto>>> readRmpresas() {
+	public Resources<EmpresaResource> readEmpresas() {
 		log.info("Buscando todas as empresas.");
-		Response<List<EmpresaDto>> response = new Response<>();
-		List<EmpresaDto> empresasDto = new ArrayList<>();
-
-		this.empresaService.getAll().forEach(emp -> empresasDto.add(this.convertEmpresaToDto(emp)));
-
-		response.setData(empresasDto);
-
-		return ResponseEntity.ok(response);
+		List<EmpresaResource> empresas = this.empresaService.getAll().stream().map(EmpresaResource::new)
+				.collect(Collectors.toList());
+		return new Resources<>(empresas);
 	}
 
 	/**
 	 * 
 	 * @param id
-	 * @param result
-	 * @return ResponseEntity<Response<EmpresaDto>>
+	 * @return EmpresaResource
 	 */
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Response<EmpresaDto>> readEmpresa(@PathVariable("id") Long id) {
+	public EmpresaResource readEmpresa(@PathVariable("id") Long id) {
 		log.info("Buscando empresa a partir do ID: {}", id);
-		Response<EmpresaDto> response = new Response<>();
-
-		Optional<Empresa> empresa = this.empresaService.findOne(id);
-
-		if (!empresa.isPresent()) {
-			log.error("Empresa não encontrada para ID: {}", id);
-			throw new EmpresaNotFoundException(id);
-		}
-
-		response.setData(this.convertEmpresaToDto(empresa.get()));
-
-		return ResponseEntity.ok(response);
-	}
-
-	@PostMapping
-	public ResponseEntity<?> add(@RequestBody EmpresaDto empresaDto) {
-		log.info("Cadastrando nova empresa {}", empresaDto);
-		Empresa empresa = this.empresaService.persist(this.convertDtoToEmpresa(empresaDto));
-		
-		Link linkEmpresaResource = new EmpresaResource(empresa).getLink("self");
-		
-		return ResponseEntity.created(URI.create(linkEmpresaResource.getHref())).build();
+		Empresa empresa = this.empresaService.findOne(id).orElseThrow(() -> new EmpresaNotFoundException(id));
+		return new EmpresaResource(empresa);
 	}
 
 	/**
 	 * 
-	 * @param empresa
-	 * @return EmpresaDto
+	 * @param empresaDto
+	 * @return ResponseEntity<?>
 	 */
-	private EmpresaDto convertEmpresaToDto(Empresa empresa) {
-		EmpresaDto dto = new EmpresaDto();
-		dto.setId(empresa.getId());
-		dto.setCnpj(empresa.getCnpj());
-		dto.setRazaoSocial(empresa.getRazaoSocial());
-		return dto;
+	@PostMapping
+	public ResponseEntity<?> add(@RequestBody EmpresaDto empresaDto) {
+		log.info("Cadastrando nova empresa {}", empresaDto);
+		Empresa empresa = this.empresaService.persist(this.convertDtoToEmpresa(empresaDto));
+
+		Link linkEmpresaResource = new EmpresaResource(empresa).getLink("self");
+
+		return ResponseEntity.created(URI.create(linkEmpresaResource.getHref())).build();
 	}
 
 	/**
@@ -110,7 +85,7 @@ public class EmpresaController {
 		empresa.setRazaoSocial(dto.getRazaoSocial());
 		return empresa;
 	}
-	
+
 	/**
 	 * 
 	 * Validate input data
@@ -119,6 +94,6 @@ public class EmpresaController {
 	 * @param result
 	 */
 	private void validateData(EmpresaDto dto, BindingResult result) {
-		
+
 	}
 }
