@@ -8,7 +8,7 @@ import org.springframework.hateoas.ResourceSupport;
 import com.rest.pontointeligente.api.controllers.EmpresaController;
 import com.rest.pontointeligente.api.entities.Empresa;
 
-public class EmpresaResource extends ResourceSupport	{
+public class EmpresaResource extends ResourceSupport {
 	
 	private final Empresa empresa;
 	
