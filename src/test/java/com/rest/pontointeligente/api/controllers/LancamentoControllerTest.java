@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -107,6 +108,7 @@ public class LancamentoControllerTest {
 	}
 
 	@Test
+	@WithMockUser(username = "ceo@paavocorp.com", roles = {"ADMIN"})
 	public void testRemove() throws Exception {
 		BDDMockito.given(this.lancamentoService.findById(Mockito.anyLong()))
 				.willReturn(Optional.of(new Lancamento()));
