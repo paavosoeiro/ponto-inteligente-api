@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers("/api/auth/**", "/api/empresas/*", "/api/pj-controller", "/api/pf-controller", "/v2/api-docs",
+				.antMatchers("/api/auth/**", "/api/empresas", "/api/pj-controller", "/api/pf-controller", "/v2/api-docs",
 						"/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**")
 				.permitAll().anyRequest().authenticated();
 		httpSecurity.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
