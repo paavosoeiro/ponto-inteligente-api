@@ -56,18 +56,18 @@ public class FuncionarioController {
 
 		Optional<Funcionario> funcionario = this.funcionarioService.findById(id);
 		if (!funcionario.isPresent()) {
-			result.addError(new ObjectError("funcionario", "Funcionário não encontrado."));
+			result.addError(new ObjectError("funcionario", "Funcionario nao encontrado."));
 		}
 
-		this.atualizarDadosFuncionario(funcionario.get(), funcionarioDto, result);
+		this.updateFuncionarioData(funcionario.get(), funcionarioDto, result);
 
 		if (result.hasErrors()) {
-			log.error("Erro validando funcionário: {}", result.getAllErrors());
-			result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
+			log.error("Erro validando funcionario: {}", result.getAllErrors());
+			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		FuncionarioResource funcionarioResource = new FuncionarioResource((this.converterFuncionarioToDto(funcionario.get())));
+		FuncionarioResource funcionarioResource = new FuncionarioResource((this.convertFuncionarioToDto(funcionario.get())));
 				
 		this.funcionarioService.persist(funcionario.get());
 		response.setData(funcionarioResource);
@@ -83,13 +83,13 @@ public class FuncionarioController {
 	 * @param result
 	 * @throws NoSuchAlgorithmException
 	 */
-	private void atualizarDadosFuncionario(Funcionario funcionario, FuncionarioDto funcionarioDto, BindingResult result)
+	private void updateFuncionarioData(Funcionario funcionario, FuncionarioDto funcionarioDto, BindingResult result)
 			throws NoSuchAlgorithmException {
 		funcionario.setNome(funcionarioDto.getNome());
 
 		if (!funcionario.getEmail().equals(funcionarioDto.getEmail())) {
 			this.funcionarioService.findByEmail(funcionarioDto.getEmail())
-					.ifPresent(func -> result.addError(new ObjectError("email", "Email já existente.")));
+					.ifPresent(func -> result.addError(new ObjectError("email", "Email ja existente.")));
 			funcionario.setEmail(funcionarioDto.getEmail());
 		}
 
@@ -114,7 +114,7 @@ public class FuncionarioController {
 	 * @param funcionario
 	 * @return FuncionarioDto
 	 */
-	private FuncionarioDto converterFuncionarioToDto(Funcionario funcionario) {
+	private FuncionarioDto convertFuncionarioToDto(Funcionario funcionario) {
 		FuncionarioDto funcionarioDto = new FuncionarioDto();
 		funcionarioDto.setId(funcionario.getId());
 		funcionarioDto.setEmail(funcionario.getEmail());

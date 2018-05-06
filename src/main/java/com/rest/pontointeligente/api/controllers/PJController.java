@@ -57,7 +57,7 @@ public class PJController {
 
 		if (bindingResult.hasErrors()) {
 			log.error("Erro validando dados de cadastro do PJ: {}", bindingResult.getAllErrors());
-			bindingResult.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
+			bindingResult.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 
