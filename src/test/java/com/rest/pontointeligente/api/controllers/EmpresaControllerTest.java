@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -80,6 +81,7 @@ public class EmpresaControllerTest {
 	}
 
 	@Test
+	@WithMockUser
 	public void testReadEmpresas() throws Exception {
 		this.mockMvc.perform(get("/api/empresas")).andExpect(status().isOk())
 				.andExpect(content().contentType(contentType))
@@ -91,6 +93,7 @@ public class EmpresaControllerTest {
 	}
 
 	@Test
+	@WithMockUser
 	public void testReadEmpresa() throws Exception {
 		this.mockMvc.perform(get("/api/empresas/" + this.empresas.get(0).getId()))
 				.andExpect(content().contentType(contentType))
@@ -98,6 +101,7 @@ public class EmpresaControllerTest {
 	}
 
 	@Test
+	@WithMockUser
 	public void testAdd() throws Exception {
 		String empresaJson = json(createEmpresaDto("21376612000153", "Empresa Teste"));
 		this.mockMvc.perform(post("/api/empresas").contentType(contentType).content(empresaJson))
