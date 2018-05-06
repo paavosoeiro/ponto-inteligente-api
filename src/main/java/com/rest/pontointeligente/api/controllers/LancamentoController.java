@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -62,16 +63,16 @@ public class LancamentoController {
 	 * @param dir
 	 * @return ResponseEntity<Response<Page<LancamentoResource>>>
 	 */
-	@GetMapping("/funcionario/{id}")
-	public ResponseEntity<Response<Page<LancamentoResource>>> findByFuncionarioId(@PathVariable("id") Long id,
+	@GetMapping("/funcionario/{funcionarioId}")
+	public ResponseEntity<Response<Page<LancamentoResource>>> findByFuncionarioId(@PathVariable("funcionarioId") Long funcionarioId,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "ord", defaultValue = "id") String ord,
 			@RequestParam(value = "dir", defaultValue = "DESC") String dir) {
-		log.info("Buscando lancamentos por ID do funcionario: {}, pagina: {}", id, page);
+		log.info("Buscando lancamentos por ID do funcionario: {}, pagina: {}", funcionarioId, page);
 		Response<Page<LancamentoResource>> response = new Response<>();
 
 		PageRequest pageRequest = PageRequest.of(page, this.pageSize, Direction.valueOf(dir), ord);
-		Page<Lancamento> lancamentos = this.lancamentoService.findByFuncionarioId(id, pageRequest);
+		Page<Lancamento> lancamentos = this.lancamentoService.findByFuncionarioId(funcionarioId, pageRequest);
 		Page<LancamentoResource> lancamentoResource = lancamentos
 				.map(lancamento -> new LancamentoResource(this.convertLancamentoToDto(lancamento)));
 
@@ -86,7 +87,7 @@ public class LancamentoController {
 	 * @return ResponseEntity<Response<LancamentoResource>>
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<LancamentoResource>> findById(Long id) {
+	public ResponseEntity<Response<LancamentoResource>> findById(@PathVariable("id") Long id) {
 		log.info("Buscando lancamento por ID: {}", id);
 		Response<LancamentoResource> response = new Response<>();
 		Optional<Lancamento> lancamento = this.lancamentoService.findById(id);
@@ -169,6 +170,7 @@ public class LancamentoController {
 	 * @return ResponseEntity<Response<String>>
 	 */
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Response<String>> remove(@PathVariable("id") Long id) {
 		log.info("Removendo lancamento: {}", id);
 		Response<String> response = new Response<>();

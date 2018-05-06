@@ -29,12 +29,13 @@ public class SwaggerConfig {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
+
 	@Bean
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.rest.pontointeligente.api.controllers"))
-				.paths(PathSelectors.any()).build().apiInfo(apiInfo());
+				.paths(PathSelectors.any()).build()
+				.apiInfo(apiInfo());
 	}
 
 	private ApiInfo apiInfo() {
@@ -42,7 +43,7 @@ public class SwaggerConfig {
 				.description("Documentação da API de acesso aos endpoints do Ponto Inteligente.").version("1.0")
 				.build();
 	}
-	
+
 	@Bean
 	public SecurityConfiguration security() {
 		String token;
